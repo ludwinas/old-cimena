@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  sudo: true
+  pre_tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+    - name: upgrade (safe) all packages
+      apt: upgrade=safe
+    - name: install or update prerequisite packages
+      apt: name={{item}} state=latest
+      with_items:
+        - vim-nox
+        - aptitude
+        - htop
+  roles:
+    - oh-my-zsh
