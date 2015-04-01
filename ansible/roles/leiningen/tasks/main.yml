@@ -1,0 +1,25 @@
+---
+- name: install java and lein prerequisites
+  apt:
+    name=default-jdk
+    state=latest
+
+- name: ensure local bin folder exists
+  file:
+    path=/home/{{user}}/bin
+    state=directory
+    owner={{user}}
+
+- name: ensures that the user has ~/bin in its path
+  lineinfile:
+    line='PATH=$PATH:$HOME/bin'
+    state=present
+    dest=/home/{{user}}/.zshrc
+
+- name: download leiningen from github repo
+  get_url:
+    url=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+    dest=/home/{{user}}/bin/lein
+    mode=0755
+    owner={{user}}
+

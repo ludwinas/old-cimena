@@ -4,14 +4,24 @@
   sudo: true
   pre_tasks:
     - name: update apt cache
-      apt: update_cache=yes
+      apt:
+        update_cache=yes
+        cache_valid_time=3600
+      tags: update
     - name: upgrade (safe) all packages
       apt: upgrade=safe
     - name: install or update prerequisite packages
-      apt: name={{item}} state=latest
+      apt:
+        name={{item}}
+        state=present
+        tags=update
       with_items:
         - vim-nox
         - aptitude
         - htop
+    # locale settings
+    - apt: name=language-pack-en state=present
+
   roles:
     - oh-my-zsh
+    - leiningen
