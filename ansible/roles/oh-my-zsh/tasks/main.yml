@@ -12,17 +12,41 @@
       dest=/home/{{user}}/.oh-my-zsh
       update=no
 
+  - name: Chown oh-my-zsh folder to the current user
+    file:
+      path=/home/{{user}}/.oh-my-zsh/
+      state=directory
+      owner={{user}}
+      group={{user}}
+
   - name: Create conf folder in homedir
-    file: path=/home/{{user}}/conf/ state=directory owner={{user}}
+    file:
+      path=/home/{{user}}/conf/
+      state=directory
+      owner={{user}}
+      group={{user}}
 
   - name: deploy .zshrc from template
-    template: src=zshrc.j2 dest=/home/{{user}}/conf/zshrc owner={{user}}
+    template:
+      src=zshrc.j2
+      dest=/home/{{user}}/conf/zshrc
+      owner={{user}}
+      group={{user}}
 
   - name: remove standard zshrc
-    file: path=/home/{{user}}/.zshrc state=absent
+    file:
+      path=/home/{{user}}/.zshrc
+      state=absent
 
   - name: Symlink .zshrc
-    file: path=/home/{{user}}/.zshrc src=/home/{{user}}/conf/zshrc state=link owner={{user}}
+    file:
+      path=/home/{{user}}/.zshrc
+      src=/home/{{user}}/conf/zshrc
+      state=link
+      owner={{user}}
+      group={{user}}
 
   - name: Set zsh as default shell
-    user: name={{user}} shell=/bin/zsh
+    user:
+      name={{user}}
+      shell=/bin/zsh

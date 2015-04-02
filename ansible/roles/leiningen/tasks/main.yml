@@ -9,6 +9,7 @@
     path=/home/{{user}}/bin
     state=directory
     owner={{user}}
+    group={{user}}
 
 - name: ensures that the user has ~/bin in its path
   lineinfile:
@@ -16,10 +17,11 @@
     state=present
     dest=/home/{{user}}/.zshrc
 
-- name: download leiningen from github repo
+- name: download leiningen from github repo, and set the ownership to the user
   get_url:
     url=https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
     dest=/home/{{user}}/bin/lein
     mode=0755
     owner={{user}}
+    group={{user}}
 
