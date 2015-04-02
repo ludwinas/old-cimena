@@ -1,0 +1,25 @@
+---
+- name: ensure apt cache is up to date
+  apt:
+    update_cache=yes
+    cache_valid_time=3600
+
+- name: install postgresql
+  apt: name={{item}}
+  with_items:
+    - postgresql
+    - python-psycopg2
+
+- name: ensure database is created
+  sudo_user: postgres
+  postgresql_db:
+    name={{dbname}}
+
+- name: ensure user has access to database
+  sudo_user: postgres
+  postgresql_user:
+    db={{dbname}}
+    name={{dbuser}}
+    password="{{dbpassword}}"
+    priv=ALL
+    role_attr_flags=NOSUPERUSER,NOCREATEDB

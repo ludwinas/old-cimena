@@ -10,6 +10,7 @@
     git:
       repo=https://github.com/robbyrussell/oh-my-zsh.git
       dest=/home/{{user}}/.oh-my-zsh
+      update=no
 
   - name: Create conf folder in homedir
     file: path=/home/{{user}}/conf/ state=directory owner={{user}}

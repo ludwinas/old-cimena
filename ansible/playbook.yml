@@ -1,7 +1,8 @@
 ---
 
-- hosts: all
-  sudo: true
+- name: provision the development server
+  hosts: all
+  sudo: yes
   pre_tasks:
     - name: update apt cache
       apt:
@@ -14,10 +15,9 @@
       apt:
         name={{item}}
         state=present
-        tags=update
       with_items:
-        - vim-nox
         - aptitude
+        - vim-nox
         - htop
     # locale settings
     - apt: name=language-pack-en state=present
@@ -25,3 +25,4 @@
   roles:
     - oh-my-zsh
     - leiningen
+    - database
