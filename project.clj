@@ -33,33 +33,33 @@
             [lein-environ "1.0.0"]
             [lein-ancient "0.6.5"]
             [ragtime/ragtime.lein "0.3.8"]]
-  
+
 
   :ring {:handler cimena.handler/app
          :init    cimena.handler/init
          :destroy cimena.handler/destroy
          :uberwar-name "cimena.war"}
-  
+
   :ragtime
   {:migrations ragtime.sql.files/migrations
    :database "jdbc:h2:./site.db"}
-  
-  
-  
-  
+
+
+
+
   :profiles
   {:uberjar {:omit-source true
              :env {:production true}
-            
+
              :aot :all}
    :dev {:dependencies [[ring-mock "0.1.5"]
                         [ring/ring-devel "1.3.2"]
                         [pjstadig/humane-test-output "0.7.0"]
                         ]
          :source-paths ["env/dev/clj"]
-         
-        
-         
+
+
+
          :repl-options {:init-ns cimena.repl}
          :injections [(require 'pjstadig.humane-test-output)
                       (pjstadig.humane-test-output/activate!)]
