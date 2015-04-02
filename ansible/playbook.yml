@@ -3,12 +3,13 @@
 - name: provision the development server
   hosts: all
   sudo: yes
+  vars:
+    user: vagrant
   pre_tasks:
     - name: update apt cache
       apt:
         update_cache=yes
         cache_valid_time=3600
-      tags: update
     - name: upgrade (safe) all packages
       apt: upgrade=safe
     - name: install or update prerequisite packages
@@ -19,10 +20,15 @@
         - aptitude
         - vim-nox
         - htop
-    # locale settings
-    - apt: name=language-pack-en state=present
+    - name: ensure language pack is installed
+      apt: name=language-pack-en state=present
+
+    - name: determine whether oh-my-zsh needs to be installed
+      stat: path=/home/{{user}}/.oh-my-zsh
+      register: myzsh
+
 
   roles:
-    - oh-my-zsh
-    - leiningen
-    - database
+    - { role: oh-my-zsh, when: not myzsh.stat.exists }
+    - { role: leiningen }
+    - { role: database }
