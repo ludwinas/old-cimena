@@ -4,7 +4,14 @@
             [compojure.core :refer [defroutes GET POST]]
             [bouncer.core :as b]
             [bouncer.validators :as v]
+            [taoensso.timbre :as timbre]
             [ring.util.response :refer [redirect response]]))
+
+(timbre/refer-timbre) ;; provides timbre aliases in this ns
+
+(defn checked? [c]
+  (not
+   (nil? c)))
 
 (defn validate-message [params]
   (first
@@ -18,7 +25,10 @@
     (-> (redirect "/")
         (assoc :flash (assoc params :errors (vals errors))))
     (do
-      (db/create-movie! (assoc params :is_watched false))
+      (let [query-params
+            (assoc (select-keys params [:title :link])
+                   :is_watched (checked? (:is_watched params)))]
+      (db/create-movie! query-params))
       (redirect "/"))))
 
 (defn delete-movie! [{:keys [params]}]
@@ -30,7 +40,7 @@
   (layout/render
    "home.html"
    (merge {:movies (db/get-movies)}
-          (select-keys flash [:title :link :errors]))
+          (select-keys flash [:title :link :is_watched :errors]))
    :name (:name flash)))
 
 (defn about-page []

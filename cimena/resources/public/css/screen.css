@@ -1,6 +1,15 @@
 html,
 body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height: 100%;
     padding-top: 40px;
+}
+
+li.movie-watched {
+    text-decoration: line-through;
+    background-color: #dcdcdc;
+}
+
+button.delete-movie {
+    margin-top:-12px;
 }

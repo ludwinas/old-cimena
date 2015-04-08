@@ -5,8 +5,8 @@
             <h4>Movies</h4>
             <ul class="list-group">
                 {% for movie in movies %}
-                    <li class="list-group-item">
-                        <strong>{{movie.title}}</strong>: {{movie.link}}
+                    <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %}">
+                        <strong>{{movie.title}}</strong> </br> {{movie.link}}
                         <button class="pull-right btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
@@ -27,22 +27,26 @@
             </div>
             <h4>Add a new Movie to the list</h4>
             <form method="POST" formaction="/">
-                {% csrf-field %}
-                <p>
-                    Title:
-                    <input class="form-control"
-                           type="text"
-                           name="title"
-                           value="{{title}}" />
-                </p>
-                <p>
-                    Link:
-                    <input class="form-control"
-                           type="text"
-                           name="link"
-                           value="{{link}}"/>
-                </p>
-                <input type="submit" class="btn btn-primary" value="go!" />
+                <div>
+                    {% csrf-field %}
+                    <div class="form-group">
+                        <label for="title">
+                            Title
+                        </label>
+                        <input class="form-control" type="text" name="title" value="{{title}}" />
+                        <label for="link">
+                            Link
+                        </label>
+                        <input class="form-control" type="text" name="link" value="{{link}}" />
+                        <label for="is_watched">
+                            Is watched
+                            <input name="is_watched" type="checkbox" value="{{is_watched}}" />
+                        </label>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">go!<button>
+                </div>
+
             </form>
         </div>
     </div>
