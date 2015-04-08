@@ -9,6 +9,17 @@ $('button.delete-movie').click(function() {
         data: {
             '__anti-forgery-token': csrf,
             'id': movieId
+        },
+        success: function(result) {
+            deleteMovieWithId(movieId);
         }
     });
 });
+
+function deleteMovieWithId(id) {
+    $target = $('.movie-id-'+id);
+    $target.hide('fast', function() {
+        $target.remove();
+    });
+    return true;
+}
