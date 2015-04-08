@@ -1,48 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-md-6">
-        <h4>Movies</h4>
-        <ul class="list-group">
-            {% for movie in movies %}
-            <li class="list-group-item">
-                <strong>{{movie.title}}</strong>: {{movie.link}}
-                <button class="pull-right btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-            </li>
-            {% endfor %}
-        </ul>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Movies</h4>
+            <ul class="list-group">
+                {% for movie in movies %}
+                    <li class="list-group-item">
+                        <strong>{{movie.title}}</strong>: {{movie.link}}
+                        <button class="pull-right btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <div>
+                {% for error in errors %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span>&times;</span>
+                        </button>
+                        {{error|join}}
+                    </div>
+                {% endfor %}
+            </div>
+            <h4>Add a new Movie to the list</h4>
+            <form method="POST" formaction="/">
+                {% csrf-field %}
+                <p>
+                    Title:
+                    <input class="form-control"
+                           type="text"
+                           name="title"
+                           value="{{title}}" />
+                </p>
+                <p>
+                    Link:
+                    <input class="form-control"
+                           type="text"
+                           name="link"
+                           value="{{link}}"/>
+                </p>
+                <input type="submit" class="btn btn-primary" value="go!" />
+            </form>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h4>Add a new Movie to the list</h4>
-        <form method="POST" formaction="/">
-            {% csrf-field %}
-            <p>
-                Title:
-                <input class="form-control"
-                       type="text"
-                       name="title"
-                       value="{{title}}" />
-            </p>
-            {% if errors.name %}
-            <div class="alert alert-danger">{{errors.name|join}}</div>
-            {% endif %}
-            <p>
-                Link:
-                <input class="form-control"
-                       type="text"
-                       name="link"
-                       value="{{link}}"/>
-            </p>
-            {% if errors.message %}
-            <div class="alert alert-danger">{{errors.message|join}}</div>
-            {% endif %}
-            <input type="submit" class="btn btn-primary" value="go!" />
-        </form>
-    </div>
-</div>
 {% endblock %}
 {% block page-scripts %}
-<script src="/js/home.js"> </script>
+    <script src="/js/home.js"> </script>
 {% endblock %}

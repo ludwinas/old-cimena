@@ -16,7 +16,7 @@
 (defn save-movie! [{:keys [params]}]
   (if-let [errors (validate-message params)]
     (-> (redirect "/")
-        (assoc :flash (assoc params :errors errors)))
+        (assoc :flash (assoc params :errors (vals errors))))
     (do
       (db/create-movie! (assoc params :is_watched false))
       (redirect "/"))))
