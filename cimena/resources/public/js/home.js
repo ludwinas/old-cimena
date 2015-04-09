@@ -24,3 +24,10 @@ function deleteMovieWithId(id) {
     return true;
 }
 
+$(function() {
+    $( ".sortable" ).sortable({
+        placeholder: "ui-state-highlight",
+        cursor: "move"
+    });
+    $( ".sortable" ).disableSelection();
+});

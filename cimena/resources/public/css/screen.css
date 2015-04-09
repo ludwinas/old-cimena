@@ -13,3 +13,12 @@ li.movie-watched {
 button.delete-movie, a.edit-movie {
     margin-top:-12px;
 }
+
+.ui-state-highlight {
+    height:62px;
+    list-style:none;
+}
+
+li.ui-sortable-handle:hover {
+    cursor: pointer;
+}
