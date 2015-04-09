@@ -14,10 +14,14 @@
         <div class="navbar-collapse collapse ">
           <ul class="nav navbar-nav">
             <li {% ifequal page "home.html" %} class="active"{%endifequal%}>
-              <a href="{{servlet-context}}/">Home</a>
+                <a href="{{servlet-context}}/">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                    List</a>
             </li>
-            <li {% ifequal page "about.html" %} class="active"{%endifequal%}>
-              <a href="{{servlet-context}}/about">About</a>
+            <li {% ifequal page "movie-edit.html" %} class="active"{%endifequal%}>
+                <a href="{{servlet-context}}/movie/new">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add new</a>
             </li>
           </ul>
         </div>

@@ -2,13 +2,13 @@ $('button.delete-movie').click(function() {
     var element = $(this);
     var movieId = element.data('movieId');
     var csrf = $('#__anti-forgery-token').val();
+    var deleteUrl = "/movie/"+encodeURIComponent(movieId)+"/delete";
 
     var request = $.ajax({
-        url: "/movie/delete",
+        url: deleteUrl,
         type: 'POST',
         data: {
             '__anti-forgery-token': csrf,
-            'id': movieId
         },
         success: function(result) {
             deleteMovieWithId(movieId);
@@ -23,3 +23,4 @@ function deleteMovieWithId(id) {
     });
     return true;
 }
+

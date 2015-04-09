@@ -1,56 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Movies</h4>
-            <ul class="list-group">
-                {% for movie in movies %}
-                    <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %}">
-                        <strong>{{movie.title}}</strong> </br> {{movie.link}}
-                        <button class="pull-right btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </button>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <div>
-                {% for error in errors %}
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span>&times;</span>
-                        </button>
-                        {{error|join}}
-                    </div>
-                {% endfor %}
-            </div>
-            <h4>Add a new Movie to the list</h4>
-            <form method="POST" formaction="/">
-                <div>
-                    {% csrf-field %}
-                    <div class="form-group">
-                        <label for="title">
-                            Title
-                        </label>
-                        <input class="form-control" type="text" name="title" value="{{title}}" />
-                        <label for="link">
-                            Link
-                        </label>
-                        <input class="form-control" type="text" name="link" value="{{link}}" />
-                        <label for="is_watched">
-                            Is watched
-                            <input name="is_watched" type="checkbox" value="{{is_watched}}" />
-                        </label>
-
-                    </div>
-                    <button type="submit" class="btn btn-primary">go!<button>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h4>Movies</h4>
+        <ul class="list-group">
+            {% for movie in movies %}
+            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %}">
+                <!-- this will be used by js making the ajax delete request -->
+                {% csrf-field %}
+                <strong>{{movie.title}}</strong> </br> {{movie.link}}
+                <div class="pull-right">
+                    <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <button class=" btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
                 </div>
-
-            </form>
-        </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <a class="btn btn-info btn-xs pull-right" title="add new movie" role="button" href="/movie/new">
+          <span class="glyphicon glyphicon-plus"></span>
+          Add new
+        </a>
     </div>
+</div>
 {% endblock %}
 {% block page-scripts %}
-    <script src="/js/home.js"> </script>
+<script src="/js/home.js"> </script>
 {% endblock %}
