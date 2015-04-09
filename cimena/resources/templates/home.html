@@ -8,7 +8,8 @@
             <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %}">
                 <!-- this will be used by js making the ajax delete request -->
                 {% csrf-field %}
-                <strong>{{movie.title}}</strong> </br> {{movie.link}}
+                <strong>{{movie.title}}</strong> </br>
+                <a href="{{movie.link}}">{{movie.link}}</a>
                 <div class="pull-right">
                     <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
                         <span class="glyphicon glyphicon-pencil"></span>
