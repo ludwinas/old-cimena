@@ -28,7 +28,7 @@
                     <input class="form-control" type="text" name="link" value="{{movie.link}}" />
                     <label for="is_watched">
                         Is watched
-                        <input name="is_watched" type="checkbox" value="{{movie.is_watched}}" />
+                        <input name="is_watched" type="checkbox" {% if movie.is_watched%} checked="checked" {% endif %} />
                     </label>
                 </div>
                 <button type="submit" class="btn btn-primary">go!<button>
