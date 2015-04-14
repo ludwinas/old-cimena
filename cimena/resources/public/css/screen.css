@@ -6,12 +6,19 @@ body {
 }
 
 li.movie-watched {
-    text-decoration: line-through;
     background-color: #dcdcdc;
 }
 
 button.delete-movie, a.edit-movie {
     margin-top:-12px;
+}
+
+li.movie-watched h5, li.movie-watched a {
+    text-decoration: line-through;
+}
+
+li.movie-watched span.movie-index {
+    text-decoration: none;
 }
 
 .ui-state-highlight {

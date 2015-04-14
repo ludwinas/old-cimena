@@ -1,10 +1,10 @@
---name: create-movie!
+-- name: create-movie!
 -- creates a new movie record
 INSERT INTO movies
 (title, link, is_watched)
 VALUES (:title, :link, :is_watched)
 
---name: update-movie!
+-- name: update-movie!
 -- update an existing movie record
 UPDATE movies
 SET title = :title, link = :link, is_watched = :is_watched
@@ -23,3 +23,16 @@ SELECT * FROM movies
 -- deletes the movie with the given id
 DELETE FROM movies
 WHERE id = :id
+
+-- name: create-movie-position!
+INSERT INTO movie_position
+(movie_id, position_prev, position_next)
+VALUES (:movie_id, :position_prev, :position_next)
+
+-- name: update-movie-position!
+UPDATE movie_position
+SET position_prev = :position_prev, position_next = :position_next
+WHERE movie_id = :movie_id
+
+-- name: get-movie-positions
+SELECT * from movie_position

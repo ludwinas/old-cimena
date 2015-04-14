@@ -5,10 +5,12 @@
         <h4>Movies</h4>
         <ul class="list-group sortable">
             {% for movie in movies %}
-            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default">
+            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-element" data-movie-id="{{movie.id}}">
                 <!-- this will be used by js making the ajax delete request -->
                 {% csrf-field %}
-                <strong>{{movie.title}}</strong> </br>
+                <h5>
+                    <span class="movie-index">{{movie.index}}.</span> {{movie.title}}
+                </h5>
                 <a href="{{movie.link}}">{{movie.link}}</a>
                 <div class="pull-right">
                     <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
@@ -22,8 +24,8 @@
             {% endfor %}
         </ul>
         <a class="btn btn-info btn-xs pull-right" title="add new movie" role="button" href="/movie/new">
-          <span class="glyphicon glyphicon-plus"></span>
-          Add new
+            <span class="glyphicon glyphicon-plus"></span>
+            Add new
         </a>
     </div>
 </div>
