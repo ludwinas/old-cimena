@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-6">
         <h4>Movies</h4>
-        <ul class="list-group sortable">
+        <ul id="movie-list" class="list-group sortable sortable-connected">
             {% for movie in movies %}
-            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-element" data-movie-id="{{movie.id}}">
+            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-to-sort" data-movie-id="{{movie.id}}">
                 <!-- this will be used by js making the ajax delete request -->
                 {% csrf-field %}
                 <h5>
@@ -16,9 +16,6 @@
                     <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <button class=" btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </button>
                 </div>
             </li>
             {% endfor %}
@@ -27,6 +24,27 @@
             <span class="glyphicon glyphicon-plus"></span>
             Add new
         </a>
+    </div>
+    <div class="col-md-6">
+        <h4>Inbox</h4>
+        <ul id="movie-inbox" class="list-group sortable sortable-connected">
+            {% for mu in movies-unsorted %}
+            <li class="list-group-item movie-id-{{mu.id}}" data-movie-id="{{mu.id}}">
+              <h5>
+                    {{mu.title}}
+              </h5>
+              <a href="{{movie.link}}">{{mu.link}}</a>
+              <div class="pull-right">
+                  <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{mu.id}}">
+                      <span class="glyphicon glyphicon-pencil"></span>
+                  </a>
+                  <button class="btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{mu.id}}">
+                      <span class="glyphicon glyphicon-trash"></span>
+                  </button>
+              </div>
+            </li>
+            {% endfor %}
+            <ul>
     </div>
 </div>
 {% endblock %}

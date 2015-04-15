@@ -59,7 +59,7 @@
         (walk-positions (get-next current movie-positions) movie-positions))))
 
 (defn sort-movies [movies movie-positions]
-  (let [first-position (some #(if (-> % :position_prev (= nil)) %) movie-positions)
+  (let [first-position (some #(when (-> % :position_prev (= nil)) %) movie-positions)
         order (walk-positions first-position movie-positions)]
     ;; now that I have an ordered list of the movie-ids I can just create an
     ;; ordered list
@@ -94,14 +94,20 @@
   (db/delete-movie! {:id (int-or-nil (:id params))})
   (response {:status "OK"}))
 
+(defn set-difference [coll1 coll2]
+  (let [first-set (into #{} coll1)
+        second-set (into #{} coll2)]
+        (clojure.set/difference first-set second-set)))
+
 (defn home-page [{:keys [flash]}]
   (layout/render
    "home.html"
    ;; here I have to sort
    (let [movies (db/get-movies)
          movie-positions (db/get-movie-positions)
-         movies-sorted (sort-movies movies movie-positions)]
-     {:movies movies-sorted})))
+         movies-sorted (sort-movies movies movie-positions)
+         movies-unsorted (set-difference movies movies-sorted)]
+     {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
 (defn edit-movie [{:keys [params flash]}]
   (let [movie-id (int-or-nil (:id params))]
