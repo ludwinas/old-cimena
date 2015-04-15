@@ -23,24 +23,44 @@
 (defn is-a-movie? [id]
   (not-nil? (movie-or-nil id)))
 
-(defn add-index [index movie]
-  (assoc movie :index index))
-
 (defn format-prev-next [item prev-item next-item]
   {:movie_id (int-or-nil item) :position_prev (int-or-nil prev-item) :position_next (int-or-nil next-item)})
 
 (defn unique-ids [coll]
   "creates a set of movie_id values from a collection of maps, we'll use this to
   compare the sets of ids and determine the difference"
-  (->>  (map (fn [this-map] (get this-map :movie_id)) coll)
+  (->>  (map :movie_id coll)
         (into #{})))
 
 (defn split-inserts [old new]
   "splits an old and a new collection between existing id values and new id
   values"
   (let [ids (clojure.set/difference (unique-ids new) (unique-ids old))]
-       ;; in this case contains? can be used to check set membership
-       (group-by (fn [x] (contains? ids (:movie_id x))) new)))
+    ;; in this case contains? can be used to check set membership
+    (group-by (fn [x] (contains? ids (:movie_id x))) new)))
+
+(defn get-item-with-id [id coll]
+  (some #(if (-> % :id (= id)) %) coll))
+
+(defn get-item-with-movie-id [id coll]
+  (some #(if (-> % :movie_id (= id)) %) coll))
+
+(defn get-next [position movie-positions]
+  (get-item-with-movie-id (:position_next position) movie-positions))
+
+(defn walk-positions [current movie-positions]
+  (when current ;; to avoid trying to get the next one when current is nil
+    (cons (:movie_id current)
+        (walk-positions (get-next current movie-positions) movie-positions))))
+
+(defn sort-movies [movies movie-positions]
+  (let [first-position (some #(if (-> % :position_prev (= nil)) %) movie-positions)
+        order (walk-positions first-position movie-positions)]
+    ;; now that I have an ordered list of the movie-ids I can just create an
+    ;; ordered list
+    (map (fn movie-from-index [current-id]
+            (get-item-with-id current-id movies))
+          order)))
 
 (defn validate-message [params]
   (first
@@ -72,8 +92,11 @@
 (defn home-page [{:keys [flash]}]
   (layout/render
    "home.html"
-   (let [movies (db/get-movies)]
-     {:movies (map-indexed add-index movies)})))
+   ;; here I have to sort
+   (let [movies (db/get-movies)
+         movie-positions (db/get-movie-positions)
+         movies-sorted (sort-movies movies movie-positions)]
+     {:movies movies-sorted})))
 
 (defn edit-movie [{:keys [params flash]}]
   (let [movie-id (int-or-nil (:id params))]

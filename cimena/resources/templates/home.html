@@ -9,7 +9,7 @@
                 <!-- this will be used by js making the ajax delete request -->
                 {% csrf-field %}
                 <h5>
-                    <span class="movie-index">{{movie.index}}.</span> {{movie.title}}
+                    {{movie.title}}
                 </h5>
                 <a href="{{movie.link}}">{{movie.link}}</a>
                 <div class="pull-right">
