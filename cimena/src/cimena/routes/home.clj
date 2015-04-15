@@ -39,14 +39,19 @@
     ;; in this case contains? can be used to check set membership
     (group-by (fn [x] (contains? ids (:movie_id x))) new)))
 
-(defn get-item-with-id [id coll]
-  (some #(if (-> % :id (= id)) %) coll))
+(defn get-item-with-keyword [keyword id coll]
+  (some #(when (= id (keyword %)) %)
+        coll))
 
-(defn get-item-with-movie-id [id coll]
-  (some #(if (-> % :movie_id (= id)) %) coll))
+(defn get-item-from-movies [movies movie-id]
+  (get-item-with-keyword :id movie-id movies))
+
+(defn get-item-from-movie-positions [movie-positions movie-position-id]
+  (get-item-with-keyword :movie_id movie-position-id movie-positions))
 
 (defn get-next [position movie-positions]
-  (get-item-with-movie-id (:position_next position) movie-positions))
+  (let [next-id (:position_next position)]
+    (get-item-from-movie-positions movie-positions next-id)))
 
 (defn walk-positions [current movie-positions]
   (when current ;; to avoid trying to get the next one when current is nil
@@ -59,7 +64,7 @@
     ;; now that I have an ordered list of the movie-ids I can just create an
     ;; ordered list
     (map (fn movie-from-index [current-id]
-            (get-item-with-id current-id movies))
+            (get-item-from-movies movies current-id))
           order)))
 
 (defn validate-message [params]
