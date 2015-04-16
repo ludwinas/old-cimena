@@ -55,6 +55,31 @@ function updateMoviePositions(positions) {
     });
 }
 
+function generateDeleteButton(id) {
+    var button = '<button class="btn btn-danger btn-xs delete-movie" type="button">'
+        + '<span class="glyphicon glyphicon-trash"></span>'
+        + '</button>';
+    button = $(button).data("movieId", id);
+    return button;
+}
+
+function archive(item) {
+    item.removeClass('movie-to-sort');
+    logMoviePositions();
+    // add delete button
+    var id = item.data("movieId");
+    var button = generateDeleteButton(id);
+    var container = item.find('div.buttons-container');
+    container.append(button);
+}
+
+function addToList(item) {
+    item.addClass('movie-to-sort');
+    logMoviePositions();
+    // remove delete button
+    item.find('button.delete-movie').remove();
+}
+
 function positionUpdated(event, ui) {
     // Several situations are possible, since this function is being called once per
     // sortable container that is involved in the update
@@ -65,13 +90,10 @@ function positionUpdated(event, ui) {
         // it means something is being carried from one list to another.
         if (sender === "movie-list") {
             // list -> inbox = archiving
-            item.removeClass('movie-to-sort');
-            logMoviePositions();
-
+            archive(item);
         } else {
             // inbox -> list = adding to the order
-            item.addClass('movie-to-sort');
-            logMoviePositions();
+            addToList(item);
         }
     } else if (target === "movie-list") {
         // either a reorder within the movie list
