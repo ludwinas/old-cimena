@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>These, we have watched</h4>
+        <ul id="movie-list" class="list-group">
+            {% for movie in movies %}
+            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-to-sort" data-movie-id="{{movie.id}}">
+                <!-- this will be used by js making the ajax delete request -->
+                {% csrf-field %}
+                <h5>
+                    {{movie.title}}
+                </h5>
+                <a href="{{movie.link}}">{{movie.link}}</a>
+                <div class="pull-right buttons-container">
+                    <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <button class="btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <img src="/img/complete.gif" alt="complete"/>
+    </div>
+    
+</div>
+{% endblock %}
+{% block page-scripts %}
+<script src="/js/watched.js"> </script>
+{% endblock %}

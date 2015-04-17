@@ -43,3 +43,7 @@ SELECT * from movie_position
 
 -- name: is-movie-in-ordered-list?
 SELECT COUNT(1) from movie_position where movie_id = :movie_id
+
+-- name: delete-movie-position!
+DELETE FROM movie_position
+WHERE movie_id = :movie_id
