@@ -57,7 +57,7 @@ function updateMoviePositions(positions) {
 
 function generateDeleteButton(id) {
     var button = '<button class="btn btn-danger btn-xs delete-movie" type="button">'
-        + '<span class="glyphicon glyphicon-trash"></span>'
+        + '<span class="glyphicon glyphicon-trash"></sp`an>'
         + '</button>';
     button = $(button).data("movieId", id);
     return button;

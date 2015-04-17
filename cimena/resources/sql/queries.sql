@@ -19,6 +19,10 @@ WHERE id = :id
 -- gets all the movies
 SELECT * FROM movies
 
+-- name: get-watched-movies
+-- gets all the movies
+SELECT * FROM movies WHERE is_watched = true ORDER BY title
+
 -- name: delete-movie!
 -- deletes the movie with the given id
 DELETE FROM movies
@@ -36,3 +40,6 @@ WHERE movie_id = :movie_id
 
 -- name: get-movie-positions
 SELECT * from movie_position
+
+-- name: is-movie-in-ordered-list?
+SELECT COUNT(1) from movie_position where movie_id = :movie_id

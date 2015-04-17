@@ -5,6 +5,10 @@ body {
     padding-top: 40px;
 }
 
+ul.sortable {
+    min-height:20px;
+}
+
 li.movie-watched {
     background-color: #dcdcdc;
 }
@@ -15,10 +19,6 @@ button.delete-movie, a.edit-movie {
 
 li.movie-watched h5, li.movie-watched a {
     text-decoration: line-through;
-}
-
-li.movie-watched span.movie-index {
-    text-decoration: none;
 }
 
 .ui-state-highlight {

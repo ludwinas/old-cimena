@@ -13,15 +13,20 @@
         </div>
         <div class="navbar-collapse collapse ">
           <ul class="nav navbar-nav">
-            <li {% ifequal page "home.html" %} class="active"{%endifequal%}>
+            <li {% ifequal page "home.html" %} class="active"{% endifequal %}>
                 <a href="{{servlet-context}}/">
                     <span class="glyphicon glyphicon-th-list"></span>
                     List</a>
             </li>
-            <li {% ifequal page "movie-edit.html" %} class="active"{%endifequal%}>
+            <li {% ifequal page "movie-edit.html" %} class="active"{% endifequal %}>
                 <a href="{{servlet-context}}/movie/new">
                     <span class="glyphicon glyphicon-plus"></span>
                     Add new</a>
+            </li>
+            <li {% ifequal page "watched.html" %} class="active"{% endifequal %}>
+                <a href="{{servlet-context}}/list-watched">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                    Watched</a>
             </li>
           </ul>
         </div>

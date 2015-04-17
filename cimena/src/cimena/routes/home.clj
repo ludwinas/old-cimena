@@ -106,7 +106,12 @@
    (let [movies (db/get-movies)
          movie-positions (db/get-movie-positions)
          movies-sorted (sort-movies movies movie-positions)
-         movies-unsorted (set-difference movies movies-sorted)]
+         ;; movies-unsorted is the list of movies in the "inbox" area
+         ;; the ones that I have just created and I haven't ordered yet
+         ;; they are thus the ones that exist, but are missing from the ordered list
+         ;; minus, of course, the watched ones
+         movies-unsorted (->> (set-difference movies movies-sorted)
+                              (filter (complement :is_watched)))]
      {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
 (defn edit-movie [{:keys [params flash]}]
@@ -117,9 +122,6 @@
       (layout/render "movie-edit.html" (merge
                                         {:movie movie}
                                         (select-keys flash [:errors]))))))
-
-(defn about-page []
-  (layout/render "about.html"))
 
 (defn update-positions! [{:keys [params]}]
   ;; Here I'll make a linked list of the parameters I got from the frontend
@@ -144,10 +146,14 @@
     )
   (response {:status "OK"}))
 
+(defn list-watched [{:keys [flash]}]
+  (layout/render "watched.html"
+                 {:movies (db/get-watched-movies)}))
+
 (defroutes home-routes
   (GET "/" request (home-page request))
   (GET "/movie/:id" request (edit-movie request))
   (POST "/movie/:id" request (save-movie! request))
   (POST "/movie/:id/delete" request (delete-movie! request))
   (POST "/update-positions" request (update-positions! request))
-  (GET "/about" [] (about-page)))
+  (GET "/list-watched" request (list-watched request)))
