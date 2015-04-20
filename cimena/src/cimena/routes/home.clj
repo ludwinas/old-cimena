@@ -1,6 +1,7 @@
 (ns cimena.routes.home
   (:require [cimena.layout :as layout]
             [cimena.db.core :as db]
+            [cimena.lib.util :as util]
             [compojure.core :refer [defroutes GET POST]]
             [bouncer.core :as b]
             [bouncer.validators :as v]
@@ -9,24 +10,14 @@
 
 (timbre/refer-timbre) ;; provides timbre aliases in this ns
 
-(defn not-nil? [c]
-  (not
-   (nil? c)))
-
-(defn int-or-nil [x]
-  (if (integer? x)
-    x
-    (try (Integer/parseInt x)
-         (catch NumberFormatException e nil))))
-
 (defn movie-or-nil [id]
-  (first (db/get-movie {:id (int-or-nil id)})))
+  (first (db/get-movie {:id (util/int-or-nil id)})))
 
 (defn is-a-movie? [id]
-  (not-nil? (movie-or-nil id)))
+  (util/not-nil? (movie-or-nil id)))
 
 (defn format-prev-next [item prev-item next-item]
-  {:movie_id (int-or-nil item) :position_prev (int-or-nil prev-item) :position_next (int-or-nil next-item)})
+  {:movie_id (util/int-or-nil item) :position_prev (util/int-or-nil prev-item) :position_next (util/int-or-nil next-item)})
 
 (defn unique-ids [coll]
   "creates a set of movie_id values from a collection of maps, we'll use this to
@@ -156,15 +147,15 @@
     (do
       (let [query-params
             (assoc (select-keys params [:title :link])
-                   :is_watched (not-nil? (:is_watched params))
-                   :id (int-or-nil (:id params)))]
+                   :is_watched (util/not-nil? (:is_watched params))
+                   :id (util/int-or-nil (:id params)))]
         (if (is-a-movie? (:id params))
           (update-movie! query-params)
           (db/create-movie! query-params)))
       (redirect "/"))))
 
 (defn delete-movie! [{:keys [params]}]
-  (db/delete-movie! {:id (int-or-nil (:id params))})
+  (db/delete-movie! {:id (util/int-or-nil (:id params))})
   (response {:status "OK"}))
 
 (defn home-page [{:keys [flash]}]
@@ -183,7 +174,7 @@
      {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
 (defn edit-movie [{:keys [params flash]}]
-  (let [movie-id (int-or-nil (:id params))]
+  (let [movie-id (util/int-or-nil (:id params))]
     (let [movie (-> {:id [movie-id]}
                     (db/get-movie)
                     (first))]
