@@ -1,6 +1,7 @@
 (ns cimena.routes.home
   (:require [cimena.layout :as layout]
             [cimena.db.core :as db]
+            [cimena.db.helpers :as dbh]
             [cimena.lib.util :as util]
             [compojure.core :refer [defroutes GET POST]]
             [bouncer.core :as b]
@@ -10,14 +11,13 @@
 
 (timbre/refer-timbre) ;; provides timbre aliases in this ns
 
-(defn movie-or-nil [id]
-  (first (db/get-movie {:id (util/int-or-nil id)})))
-
 (defn is-a-movie? [id]
-  (util/not-nil? (movie-or-nil id)))
+  (util/not-nil? (dbh/movie-or-nil id)))
 
 (defn format-prev-next [item prev-item next-item]
-  {:movie_id (util/int-or-nil item) :position_prev (util/int-or-nil prev-item) :position_next (util/int-or-nil next-item)})
+  {:movie_id (util/int-or-nil item)
+   :position_prev (util/int-or-nil prev-item)
+   :position_next (util/int-or-nil next-item)})
 
 (defn unique-ids [coll]
   "creates a set of movie_id values from a collection of maps, we'll use this to
@@ -32,20 +32,11 @@
     ;; in this case contains? can be used to check set membership
     (group-by (fn [x] (contains? ids (:movie_id x))) new)))
 
-(defn set-difference [coll1 coll2]
-  (let [first-set (into #{} coll1)
-        second-set (into #{} coll2)]
-        (clojure.set/difference first-set second-set)))
-
-(defn get-item-with-keyword [keyword id coll]
-  (some #(when (= id (keyword %)) %)
-        coll))
-
 (defn get-item-from-movies [movies movie-id]
-  (get-item-with-keyword :id movie-id movies))
+  (util/get-item-with-keyword :id movie-id movies))
 
 (defn get-item-from-movie-positions [movie-positions movie-position-id]
-  (get-item-with-keyword :movie_id movie-position-id movie-positions))
+  (util/get-item-with-keyword :movie_id movie-position-id movie-positions))
 
 (defn get-next [position movie-positions]
   (let [next-id (:position_next position)]
@@ -73,16 +64,12 @@
         new-ids (map :movie_id movies)]
     (set-difference old-ids new-ids)))
 
-(defn validate-message [params]
+(defn validate-movie [params]
   (first
    (b/validate
     params
     :title v/required
     :link v/required)))
-
-(defn delete-movie-position! [movie-id]
-  (let [query-params {:movie_id movie-id}]
-    (db/delete-movie-position! query-params)))
 
 (defn store-positions-from-list! [movie-ids]
   ;; Here I'll make a linked list of the parameters I got from the frontend
@@ -99,7 +86,7 @@
         inserts (get updates-inserts true) ;; true = insert
         ;; To determine instead which are updates and which can be omitted, we
         ;; must compare the update candidates with the existing list
-        updates (set-difference (get updates-inserts false) old-movie-positions)
+        updates (util/set-difference (get updates-inserts false) old-movie-positions)
         obsolete (find-obsolete old-movie-positions movie-positions)]
     ;; We'll first deal with the inserts
     (doall (map db/create-movie-position! inserts))
@@ -107,7 +94,7 @@
     (doall (map db/update-movie-position! updates))
     ;; then we'll clean up those records in the movie-position table
     ;; that are obsolete
-    (doall (map delete-movie-position! obsolete))))
+    (doall (map dbh/delete-movie-position! obsolete))))
 
 (defn archive-movie! [id]
   "archiving a movie is the process of removing it from the ordered
@@ -118,19 +105,12 @@
         new-order (filter #(not= % id) order)]
     (store-positions-from-list! new-order)))
 
-(defn is-movie-in-ordered-list? [movie-id]
-  (let [query-params {:movie_id movie-id}]
-    (-> (db/is-movie-in-ordered-list? query-params)
-        (first)
-        :count
-        pos?)))
-
 (defn update-movie! [params]
   ;; when the movie's new state contains is_watched = true
   (when (:is_watched params)
     ;; check whether we're marking an ordered movie as watched
     (let [movie-id (:id params)
-          ordered? (is-movie-in-ordered-list? movie-id)]
+          ordered? (dbh/is-movie-in-ordered-list? movie-id)]
       (when ordered?
         ;; In this case we're marking an ordered movie as watched, this means
         ;; that we should remove it from the ordered list, as it's pointless to
@@ -139,7 +119,7 @@
   (db/update-movie! params))
 
 (defn save-movie! [{:keys [params]}]
-  (if-let [errors (validate-message params)]
+  (if-let [errors (validate-movie params)]
     (-> (redirect (str "/movie/" (:id params))) ;; redirect back to the same page
         (assoc :flash (assoc params :errors (vals errors))))
     ;; at this point we know that the content is valid
@@ -169,7 +149,7 @@
          ;; the ones that I have just created and I haven't ordered yet
          ;; they are thus the ones that exist, but are missing from the ordered list
          ;; minus, of course, the watched ones
-         movies-unsorted (->> (set-difference movies movies-sorted)
+         movies-unsorted (->> (util/set-difference movies movies-sorted)
                               (filter (complement :is_watched)))]
      {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
