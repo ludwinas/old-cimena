@@ -48,8 +48,6 @@
 (defn get-item-from-movies [movies movie-id]
   (util/get-item-with-keyword :id movie-id movies))
 
-
-
 (defn sort-movies [movies movie-positions]
   (let [order (get-order-from-movie-positions movie-positions)]
     ;; now that I have an ordered list of the movie-ids I can just create an
