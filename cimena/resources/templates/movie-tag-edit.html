@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-2">
+        <h4>Come on, add a movie tag</h4>
+        <form method="POST" formaction="/movie-tag/{{movie-tag.id}}">
+            <div>
+                {% csrf-field %}
+                <div class="form-group">
+                    <label for="name">
+                        Label
+                    </label>
+                    <input class="form-control" type="text" name="label" value="{{movie-tag.label}}" />
+                    <label for="color">
+                        Colour
+                    </label>
+                    <input class="form-control" type="text" name="color" value="{{movie-tag.color}}" />
+                </div>
+                <button type="submit" class="btn btn-primary">go!<button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block page-scripts %}
+{% endblock %}

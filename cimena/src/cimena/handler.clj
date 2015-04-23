@@ -1,6 +1,7 @@
 (ns cimena.handler
   (:require [compojure.core :refer [defroutes routes]]
             [cimena.routes.home :refer [home-routes]]
+            [cimena.routes.movie-tag :refer [movie-tag-routes]]
             [cimena.middleware
              :refer [development-middleware production-middleware]]
             [cimena.session :as session]
@@ -49,7 +50,8 @@
 
 (def app
   (-> (routes
-        home-routes
-        base-routes)
+       home-routes
+       movie-tag-routes
+       base-routes)
       development-middleware
       production-middleware))

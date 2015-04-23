@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-2">
+        <h4>These are the tags you can apply to movies</h4>
+        <ul id="movie-tag-list" class="list-group">
+            {% for tag in movie-tag %}
+            {% endfor %}
+        </ul>
+         <a class="btn btn-info btn-xs pull-left" title="add new movie" role="button" href="/movie-tag/new">
+            <span class="glyphicon glyphicon-plus"></span>
+            New movie tag
+        </a>
+    </div>
+</div>
+{% endblock %}
+{% block page-scripts %}
+{% endblock %}
