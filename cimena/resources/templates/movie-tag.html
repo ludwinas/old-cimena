@@ -4,7 +4,19 @@
     <div class="col-md-6 col-md-offset-2">
         <h4>These are the tags you can apply to movies</h4>
         <ul id="movie-tag-list" class="list-group">
-            {% for tag in movie-tag %}
+            {% csrf-field %}
+            {% for tag in movie-tags %}
+            <li class="list-group-item movie-tag-id-{{tag.id}}">
+                <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label"> {{tag.label}} </span>
+                <div class="pull-right buttons-container">
+                    <a class="btn btn-info btn-xs" role="button" href="/movie-tag/{{tag.id}}">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <button class="btn btn-danger btn-xs delete-movie-tag" type="button" data-movie-tag-id="{{tag.id}}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+            </li>
             {% endfor %}
         </ul>
          <a class="btn btn-info btn-xs pull-left" title="add new movie" role="button" href="/movie-tag/new">
@@ -15,4 +27,5 @@
 </div>
 {% endblock %}
 {% block page-scripts %}
+<script src="/js/movie-tag.js"> </script>
 {% endblock %}

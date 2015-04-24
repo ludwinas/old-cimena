@@ -47,3 +47,29 @@ SELECT COUNT(1) from movie_position where movie_id = :movie_id
 -- name: delete-movie-position!
 DELETE FROM movie_position
 WHERE movie_id = :movie_id
+
+-- name: create-movie-tag!
+-- creates a new movie record
+INSERT INTO movie_tag
+(label, color)
+VALUES (:label, :color)
+
+-- name: update-movie-tag!
+-- update an existing movie record
+UPDATE movie_tag
+SET label = :label, color = :color
+WHERE id = :id
+
+-- name: get-movie-tag
+-- retrieve a movie-tag given the id.
+SELECT * FROM movie_tag
+WHERE id = :id
+
+-- name: get-movie-tags
+-- gets all the movie-tags
+SELECT * FROM movie_tag
+
+-- name: delete-movie-tag!
+-- deletes the movie-tag with the given id
+DELETE FROM movie_tag
+WHERE id = :id

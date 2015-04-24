@@ -38,6 +38,8 @@
         (assoc :flash (assoc params :errors (vals errors))))
     ;; at this point we know that the content is valid
     ;; and we want to figure out whether it's a create or update
+    ;; TODO: outsource this to a db helper (at least building the query params,
+    ;; seing as there's a bunch of logic embedded in the update function
     (do
       (let [query-params
             (assoc (select-keys params [:title :link])
@@ -57,7 +59,6 @@
 (defn home-page [{:keys [flash]}]
   (layout/render
    "home.html"
-   ;; here I have to sort
    (let [movies (db/get-movies)
          movie-positions (db/get-movie-positions)
          movies-sorted (m/sort-movies movies movie-positions)
