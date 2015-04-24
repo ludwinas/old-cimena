@@ -34,3 +34,16 @@
 
 (defn delete-movie-tag! [id]
   (db/delete-movie-tag! {:id (util/int-or-nil id)}))
+
+(defn movie-add-tags! [id movie-tag-ids]
+  "expects a movie id and a vector containing the list of movie tags that are to
+  be associated with it"
+  (let [movie-id (util/int-or-nil id)
+        existing-tags (db/movie-get-tags {:movie_id movie-id})
+        existing-ids (map #(:movie_tag_id %) existing-tags)]
+    ;; delete existing tags that are missing from the list of ids
+    ;; and then add new ones!
+    ;; (doseq [tag-id movie-tag-ids]
+    ;;   (db/movie-add-tag! {:movie_id movie-id
+    ;;                       :movie_tag_id (util/int-or-nil tag-id)}))
+  )

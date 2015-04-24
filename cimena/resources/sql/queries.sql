@@ -1,4 +1,4 @@
--- name: create-movie!
+-- name: create-movie<!
 -- creates a new movie record
 INSERT INTO movies
 (title, link, is_watched)
@@ -73,3 +73,20 @@ SELECT * FROM movie_tag
 -- deletes the movie-tag with the given id
 DELETE FROM movie_tag
 WHERE id = :id
+
+-- name: movie-add-tag!
+-- associates a movie with a movie_tag
+INSERT INTO movies_movie_tag
+(movie_id, movie_tag_id)
+VALUES (:movie_id, :movie_tag_id)
+
+-- name: movie-delete-tag!
+DELETE FROM movies_movie_tag
+WHERE movie_id = :movie_id AND movie_tag_id = :movie_tag_id
+
+-- name: movie-get-tags
+SELECT * FROM movies_movie_tag
+WHERE movie_id = :movie_id
+
+-- name: get-movies-movie-tags
+SELECT * FROM movies_movie_tag

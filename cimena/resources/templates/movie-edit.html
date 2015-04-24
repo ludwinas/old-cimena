@@ -22,18 +22,34 @@
                         Title
                     </label>
                     <input class="form-control" type="text" name="title" value="{{movie.title}}" />
+                </div>
+                <div class="form-group">
                     <label for="link">
                         Link
                     </label>
                     <input class="form-control" type="text" name="link" value="{{movie.link}}" />
+                </div>
+                <div class="checkbox">
                     <label for="is_watched">
-                        Is watched
-                        <input name="is_watched" type="checkbox" {% if movie.is_watched%} checked="checked" {% endif %} />
+                        <input name="is_watched" type="checkbox" {% if movie.is_watched%} checked="checked" {% endif %} />  Is watched
                     </label>
+                </div>
+                <div class="form-group">
+                    <label for="movie-tags">
+                        Movie tags:
+                    </label>
+                    <select name="movie-tags" class="form-control chosen-select" multiple data-placeholder="Choose which movie tags you want to apply" >
+                        {% for tag in movie-tags%}
+                        <option value="{{tag.id}}">{{tag.label}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">go!<button>
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+{% block page-scripts %}
+<script src="/js/edit-movie.js"> </script>
 {% endblock %}

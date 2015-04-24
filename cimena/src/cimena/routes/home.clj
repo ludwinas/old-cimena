@@ -41,15 +41,20 @@
     ;; TODO: outsource this to a db helper (at least building the query params,
     ;; seing as there's a bunch of logic embedded in the update function
     (do
-      (let [query-params
-            (assoc (select-keys params [:title :link])
-                   :is_watched (util/not-nil? (:is_watched params))
-                   :id (util/int-or-nil (:id params)))]
-        (if (m/is-a-movie? (:id params))
+      (let [movie-id (:id params)
+            query-params (assoc (select-keys params [:title :link])
+                                :is_watched (util/not-nil? (:is_watched params))
+                                :id (util/int-or-nil movie-id))
+            movie-tags (:movie-tags params)]
+        (if (m/is-a-movie? movie-id)
           ;; we use the function because some archiving logic is necessary before
           ;; we perform the actual db query
-          (update-movie! query-params)
-          (db/create-movie! query-params)))
+          (do
+            (update-movie! query-params)
+            (dbh/movie-add-tags! movie-id movie-tags))
+          (let [new-movie (db/create-movie<! query-params)
+                new-movie-id (:id new-movie)]
+            (dbh/movie-add-tags! new-movie-id movie-tags))))
       (redirect "/"))))
 
 (defn delete-movie! [{:keys [params]}]
@@ -71,9 +76,11 @@
      {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
 (defn edit-movie [{:keys [params flash]}]
-  (let [movie (dbh/movie-or-nil (:id params))]
+  (let [movie (dbh/movie-or-nil (:id params))
+        movie-tags (db/get-movie-tags)]
       (layout/render "movie-edit.html" (merge
                                         {:movie movie}
+                                        {:movie-tags movie-tags}
                                         (select-keys flash [:errors])))))
 
 (defn update-positions! [{:keys [params]}]
