@@ -39,14 +39,22 @@
   "expects a movie id and a vector containing the list of movie tags that are to
   be associated with it"
   (let [movie-id (util/int-or-nil id)
-        existing-tags (db/movie-get-tags {:movie_id movie-id})
-        existing-ids (map :movie_tag_id existing-tags)]
+        existing-ids (->> (db/movie-get-tags {:movie_id movie-id})
+                          (map :movie_tag_id))
+        ;; data-diff returns a tuple of [things-only-in-a things-only-in-b
+        ;; things-in-both]
+        difference (util/data-diff existing-ids movie-tag-ids)
+        deletes (get difference 0) ;; things only in existing-ids
+        inserts (get difference 1)] ;; things only in movie-tag-ids
     ;; delete existing tags that are missing from the list of ids
+    (doseq [tag-id deletes]
+      (db/movie-delete-tag! {:movie_id movie-id
+                             :movie_tag_id (util/int-or-nil tag-id)}))
     ;; and then add new ones!
-    ;; (doseq [tag-id movie-tag-ids]
-    ;;   (db/movie-add-tag! {:movie_id movie-id
-    ;;                       :movie_tag_id (util/int-or-nil tag-id)}))
-  ))
+    (doseq [tag-id inserts]
+      (db/movie-add-tag! {:movie_id movie-id
+                          :movie_tag_id (util/int-or-nil tag-id)}))
+    ))
 
 (defn movie-get-tags [movie-id]
   (let [query-params {:movie_id (util/int-or-nil movie-id)}]

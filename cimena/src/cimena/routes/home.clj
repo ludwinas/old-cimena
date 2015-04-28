@@ -32,6 +32,7 @@
     :title v/required
     :link v/required)))
 
+
 (defn save-movie! [{:keys [params]}]
   (if-let [errors (validate-movie params)]
     (-> (redirect (str "/movie/" (:id params))) ;; redirect back to the same page
@@ -45,7 +46,7 @@
             query-params (assoc (select-keys params [:title :link])
                                 :is_watched (util/not-nil? (:is_watched params))
                                 :id (util/int-or-nil movie-id))
-            movie-tags (:movie-tags params)]
+            movie-tags (util/into-a-vec (:movie-tags params))]
         (if (m/is-a-movie? movie-id)
           ;; we use the function because some archiving logic is necessary before
           ;; we perform the actual db query
