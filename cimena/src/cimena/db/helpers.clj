@@ -40,10 +40,15 @@
   be associated with it"
   (let [movie-id (util/int-or-nil id)
         existing-tags (db/movie-get-tags {:movie_id movie-id})
-        existing-ids (map #(:movie_tag_id %) existing-tags)]
+        existing-ids (map :movie_tag_id existing-tags)]
     ;; delete existing tags that are missing from the list of ids
     ;; and then add new ones!
     ;; (doseq [tag-id movie-tag-ids]
     ;;   (db/movie-add-tag! {:movie_id movie-id
     ;;                       :movie_tag_id (util/int-or-nil tag-id)}))
-  )
+  ))
+
+(defn movie-get-tags [movie-id]
+  (let [query-params {:movie_id (util/int-or-nil movie-id)}]
+    (->> (db/movie-get-tags query-params)
+         (map :movie_tag_id))))

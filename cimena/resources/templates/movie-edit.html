@@ -36,11 +36,11 @@
                 </div>
                 <div class="form-group">
                     <label for="movie-tags">
-                        Movie tags:
+                        Movie tags
                     </label>
                     <select name="movie-tags" class="form-control chosen-select" multiple data-placeholder="Choose which movie tags you want to apply" >
                         {% for tag in movie-tags%}
-                        <option value="{{tag.id}}">{{tag.label}}</option>
+                        <option value="{{tag.id}}" {% if tag.selected %} selected {% endif %}>{{tag.label}}</option>
                         {% endfor %}
                     </select>
                 </div>

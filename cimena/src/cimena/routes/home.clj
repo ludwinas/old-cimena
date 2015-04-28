@@ -76,12 +76,20 @@
      {:movies movies-sorted :movies-unsorted movies-unsorted})))
 
 (defn edit-movie [{:keys [params flash]}]
-  (let [movie (dbh/movie-or-nil (:id params))
-        movie-tags (db/get-movie-tags)]
-      (layout/render "movie-edit.html" (merge
-                                        {:movie movie}
-                                        {:movie-tags movie-tags}
-                                        (select-keys flash [:errors])))))
+  (let [movie-id (:id params)
+        movie (dbh/movie-or-nil movie-id)
+        all-movie-tags (db/get-movie-tags)
+        this-movie-tags (set (dbh/movie-get-tags movie-id))
+        ;; adds a new selected : boolean to the movie tags list based on whether
+        ;; the movie tag is already used for this movie or not
+        ;; this is because we cannot check list membership in the template
+        movie-tags (map
+                    #(merge {:selected (contains? this-movie-tags (:id %))} %)
+                    all-movie-tags)]
+     (layout/render "movie-edit.html" (merge
+                                       {:movie movie}
+                                       {:movie-tags movie-tags}
+                                       (select-keys flash [:errors])))))
 
 (defn update-positions! [{:keys [params]}]
   (let [movie-ids (:positions params)]

@@ -85,7 +85,8 @@ DELETE FROM movies_movie_tag
 WHERE movie_id = :movie_id AND movie_tag_id = :movie_tag_id
 
 -- name: movie-get-tags
-SELECT * FROM movies_movie_tag
+-- gets all the movie-tags that correspond to the provided movie
+SELECT movie_tag_id FROM movies_movie_tag
 WHERE movie_id = :movie_id
 
 -- name: get-movies-movie-tags
