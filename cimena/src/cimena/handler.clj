@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [defroutes routes]]
             [cimena.routes.home :refer [home-routes]]
             [cimena.routes.movie-tag :refer [movie-tag-routes]]
+            [cimena.routes.movie-search :refer [movie-search-routes]]
             [cimena.middleware
              :refer [development-middleware production-middleware]]
             [cimena.session :as session]
@@ -52,6 +53,7 @@
   (-> (routes
        home-routes
        movie-tag-routes
+       movie-search-routes
        base-routes)
       development-middleware
       production-middleware))
