@@ -108,3 +108,9 @@ function logMoviePositions() {
     var positions = getMoviePositions();
     updateMoviePositions(positions);
 }
+
+$('span.movie-tag-label').each(function(index, elem) {
+    var tag = $(elem);
+    var tagColor = tag.data('tagColor');
+    tag.css('backgroundColor', tagColor);
+});

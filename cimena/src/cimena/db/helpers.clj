@@ -8,6 +8,26 @@
 (defn movie-or-nil [id]
   (first (db/get-movie {:id (util/int-or-nil id)})))
 
+(defn movie-get-tags-from-list [id tags-list]
+  (map :movie_tag_id (filter #(= (:movie_id %) id) tags-list)))
+
+(defn get-tag-by-id [tag-id movie-tags]
+  (util/get-item-with-keyword :id tag-id movie-tags))
+
+(defn get-movies []
+  (let [movies-from-db (db/get-movies)
+        movie-tags (db/get-movie-tags)
+        movies-movie-tags (db/get-movies-movie-tags)]
+        ;; For each movie we first look up which movie tags are associated with
+        ;; it and then, by id, we retrieve tag information. Then we merge that
+        ;; tag information with the original movie hashmap
+    (map (fn [current-movie]
+           (merge current-movie
+                  {:tags (map
+                          #(get-tag-by-id % movie-tags)
+                          (movie-get-tags-from-list (:id current-movie) movies-movie-tags))}))
+         movies-from-db)))
+
 (defn delete-movie-position! [movie-id]
   (let [query-params {:movie_id movie-id}]
     (db/delete-movie-position! query-params)))

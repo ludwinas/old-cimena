@@ -65,7 +65,7 @@
 (defn home-page [{:keys [flash]}]
   (layout/render
    "home.html"
-   (let [movies (db/get-movies)
+   (let [movies (dbh/get-movies)
          movie-positions (db/get-movie-positions)
          movies-sorted (m/sort-movies movies movie-positions)
          ;; movies-unsorted is the list of movies in the "inbox" area
