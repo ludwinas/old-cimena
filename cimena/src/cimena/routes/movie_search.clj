@@ -15,7 +15,7 @@
 (defn get-api-key-from-config []
   (config/get-param-by-keyword :tmdb_api_key))
 
-(defn call-tmdb-with-keyword [keyword]
+(defn search-tmdb-with-keyword [keyword]
   (let [tmdb-api-key (get-api-key-from-config)
         response (client/get "http://api.themoviedb.org/3/search/movie"
                              {:query-params {:api_key tmdb-api-key
@@ -28,10 +28,20 @@
 
 (defn movie-search-by-keyword  [{:keys [params]}]
   (let [keyword (:keyword params)
-        results (call-tmdb-with-keyword keyword)]
+        results (search-tmdb-with-keyword keyword)]
     (-> (redirect "/movie-search")
         (assoc :flash {:keyword keyword :results results}))))
 
+(defn movie-view-details [{:keys [params]}]
+  (let [tmdb-api-key (get-api-key-from-config)
+        tmdb-id (:id params)
+        response (client/get (str "http://api.themoviedb.org/3/movie/" tmdb-id) 
+                             {:query-params {:api_key tmdb-api-key}})
+        decoded-response (parse-string (:body response) true)]
+    (layout/render "movie-search-details.html" {:result decoded-response})
+    ))
+
 (defroutes movie-search-routes
   (GET "/movie-search" request (movie-search-page request))
+  (GET "/movie-search/:id" request (movie-view-details request))
   (POST "/movie-search" request (movie-search-by-keyword request)))

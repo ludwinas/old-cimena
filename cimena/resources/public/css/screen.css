@@ -29,3 +29,15 @@ li.movie-watched h5, li.movie-watched a {
 li.ui-sortable-handle:hover {
     cursor: pointer;
 }
+
+div.space-top {
+    padding-top:2.5em;
+}
+
+.action-buttons a.btn {
+    margin-top:10px;
+}
+
+.action-buttons a.btn:first {
+    margin-top:none;
+}

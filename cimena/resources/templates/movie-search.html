@@ -19,10 +19,20 @@
         <ul class="list-group">
             {% for result in results %}
             <li class="list-group-item" data-tmdb-movie-id="{{result.id}}">
-                <h5>{{result.title}} {% if not result.release_date|empty?%}({{result.release_date}}){% endif %} </h5>
-                {% if not result.poster_path|empty? %}
-                <img src="https://image.tmdb.org/t/p/w154/{{result.poster_path}}" />
-                {% endif %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h5>{{result.title}} {% if not result.release_date|empty?%}({{result.release_date}}){% endif %} </h5>
+                        {% if not result.poster_path|empty? %}
+                        <a href="/movie-search/{{result.id}}">
+                            <img src="https://image.tmdb.org/t/p/w154/{{result.poster_path}}"/>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4 space-top action-buttons">
+                        <a class="btn btn-default btn-sm" href="/movie-search/{{result.id}}" role="button">More info</a>
+                        <a class="btn btn-default btn-sm" href="#" role="button">Add this movie</a>
+                    </div>
+                </div>
             </li>
             {% endfor %}
         </ul>
