@@ -13,6 +13,11 @@
 (defn get-config []
   @config-data)
 
+;; so here we're assuming that the config file is a hashmap
+(defn get-param-by-keyword [keyword]
+  "return the config parameter that corresponds to the given hashmap keyword"
+    (keyword @config-data))
+
 (defn init-config []
   (let [conf (load-config CONFIG-URI)]
     (reset! config-data conf)))

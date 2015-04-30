@@ -16,6 +16,16 @@
 <div class="row">
     <div class="col-md-6 col-md-offset-2">
         <h4>Results for {{keyword}}:</h4>
+        <ul class="list-group">
+            {% for result in results %}
+            <li class="list-group-item" data-tmdb-movie-id="{{result.id}}">
+                <h5>{{result.title}} {% if not result.release_date|empty?%}({{result.release_date}}){% endif %} </h5>
+                {% if not result.poster_path|empty? %}
+                <img src="https://image.tmdb.org/t/p/w154/{{result.poster_path}}" />
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 {% endif %}

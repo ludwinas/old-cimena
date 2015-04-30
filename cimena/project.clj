@@ -20,6 +20,8 @@
                  [prone "0.8.1"]
                  [ragtime "0.3.8"]
                  [yesql "0.5.0-rc1"]
+                 [clj-http "1.1.1"]
+                 [cheshire "5.4.0"]
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]]
 
   :min-lein-version "2.0.0"
