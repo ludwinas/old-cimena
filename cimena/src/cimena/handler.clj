@@ -6,6 +6,7 @@
             [cimena.middleware
              :refer [development-middleware production-middleware]]
             [cimena.session :as session]
+            [cimena.config :as config]
             [compojure.route :as route]
             [taoensso.timbre :as timbre]
             [taoensso.timbre.appenders.rotor :as rotor]
@@ -19,21 +20,25 @@
 
 (defn init
   "init will be called once when
-   app is deployed as a servlet on
-   an app server such as Tomcat
-   put any initialization code here"
+  app is deployed as a servlet on
+  an app server such as Tomcat
+  put any initialization code here"
   []
   (timbre/set-config!
-    [:appenders :rotor]
-    {:min-level :info
-     :enabled? true
-     :async? false ; should be always false for rotor
-     :max-message-per-msecs nil
-     :fn rotor/appender-fn})
+   [:appenders :rotor]
+   {:min-level :info
+    :enabled? true
+    :async? false ; should be always false for rotor
+    :max-message-per-msecs nil
+    :fn rotor/appender-fn})
 
   (timbre/set-config!
-    [:shared-appender-config :rotor]
-    {:path "cimena.log" :max-size (* 512 1024) :backlog 10})
+   [:shared-appender-config :rotor]
+   {:path "cimena.log" :max-size (* 512 1024) :backlog 10})
+
+  ;; calling this loads the config file and sets it in an atom
+  ;; accessible in the future by calling config/get-config
+  (config/init-config)
 
   (if (env :dev) (parser/cache-off!))
   ;;start the expired session cleanup job
@@ -43,7 +48,7 @@
 
 (defn destroy
   "destroy will be called when your application
-   shuts down, put any clean up code here"
+  shuts down, put any clean up code here"
   []
   (timbre/info "cimena is shutting down...")
   (cronj/shutdown! session/cleanup-job)

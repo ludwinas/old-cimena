@@ -8,7 +8,6 @@
             [ring.util.response :refer [redirect response]]))
 
 (timbre/refer-timbre) ;; provides timbre aliases in this ns
-
  
 (defn movie-search-page [{:keys [params flash]}]
   (layout/render "movie-search.html" flash))
