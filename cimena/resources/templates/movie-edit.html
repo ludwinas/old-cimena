@@ -14,7 +14,7 @@
             </div>
             {% endfor %}
         </div>
-        <form method="POST" formaction="/movie/{{movie.id}}">
+        <form method="POST" action="/movie/{{movie.id}}">
             <div>
                 {% csrf-field %}
                 <div class="form-group">

@@ -92,6 +92,13 @@
                                        {:movie-tags movie-tags}
                                        (select-keys flash [:errors])))))
 
+(defn populate-new-movie [{:keys [params]}]
+  (let [movie {:title (:title params) :link (:link params) :id "new"}
+        tags (db/get-movie-tags)]
+    (layout/render "movie-edit.html"
+                   {:movie movie
+                    :movie-tags tags})))
+
 (defn update-positions! [{:keys [params]}]
   (let [movie-ids (:positions params)]
     (m/store-positions-from-list! movie-ids))
@@ -107,4 +114,5 @@
   (POST "/movie/:id" request (save-movie! request))
   (POST "/movie/:id/delete" request (delete-movie! request))
   (POST "/update-positions" request (update-positions! request))
+  (GET "/movie/new/populate" request (populate-new-movie request))
   (GET "/list-watched" request (list-watched request)))

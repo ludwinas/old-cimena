@@ -34,10 +34,10 @@ div.space-top {
     padding-top:2.5em;
 }
 
-.action-buttons a.btn {
+.action-buttons .btn {
     margin-top:10px;
 }
 
-.action-buttons a.btn:first {
+.action-buttons .btn:first {
     margin-top:none;
 }
