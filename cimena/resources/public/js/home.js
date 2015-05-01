@@ -1,3 +1,8 @@
+// initialize bootstrap's tooltips
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 // Activate jquery-ui sortable element
 $(function() {
     $( "#movie-list, #movie-inbox").sortable({

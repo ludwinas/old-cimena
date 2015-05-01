@@ -8,13 +8,17 @@
             {% csrf-field %}
             {% for movie in movies %}
             <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-to-sort" data-movie-id="{{movie.id}}">
-                <h5>{{movie.title}}
-                    <span class="movie-tags">
-                        {% for tag in movie.tags %}
-                        <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
-                        {% endfor %}
-                    </span>
+                <h5 {% if not movie.original_title|empty? %}
+                    data-toggle="tooltip" data-placement="top" title="{{movie.original_title}}"
+                    {% endif %} >
+                    {{movie.title}}
                 </h5>
+                <span class="movie-tags">
+                    {% for tag in movie.tags %}
+                    <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
+                    {% endfor %}
+                </span>
+                <br>
                 <a href="{{movie.link}}">{{movie.link}}</a>
                 <div class="pull-right buttons-container">
                     <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
@@ -30,13 +34,17 @@
         <ul id="movie-inbox" class="list-group sortable sortable-connected">
             {% for mu in movies-unsorted %}
             <li class="list-group-item movie-id-{{mu.id}} {%  if mu.is_watched %} movie-watched {% endif %}" data-movie-id="{{mu.id}}">
-                <h5>{{mu.title}}
-                    <span class="movie-tags">
-                        {% for tag in mu.tags %}
-                        <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
-                        {% endfor %}
-                    </span>
+                <h5 {% if not mu.original_title|empty? %}
+                    data-toggle="tooltip" data-placement="top" title="{{mu.original_title}}"
+                    {% endif %} >
+                    {{mu.title}}
                 </h5>
+                <span class="movie-tags">
+                    {% for tag in mu.tags %}
+                    <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
+                    {% endfor %}
+                </span>
+                <br>
                 <a href="{{mu.link}}">{{mu.link}}</a>
                 <div class="pull-right buttons-container">
                     <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{mu.id}}">

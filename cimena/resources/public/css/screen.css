@@ -41,3 +41,7 @@ div.space-top {
 .action-buttons .btn:first {
     margin-top:none;
 }
+
+h5 {
+    display:inline-block;
+}

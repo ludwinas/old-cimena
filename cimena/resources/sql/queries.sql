@@ -1,13 +1,13 @@
 -- name: create-movie<!
 -- creates a new movie record
 INSERT INTO movies
-(title, link, is_watched)
-VALUES (:title, :link, :is_watched)
+(title, link, is_watched, original_title)
+VALUES (:title, :link, :is_watched, :original_title)
 
 -- name: update-movie!
 -- update an existing movie record
 UPDATE movies
-SET title = :title, link = :link, is_watched = :is_watched
+SET title = :title, link = :link, is_watched = :is_watched, original_title = :original_title
 WHERE id = :id
 
 -- name: get-movie

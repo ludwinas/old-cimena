@@ -43,7 +43,7 @@
     ;; seing as there's a bunch of logic embedded in the update function
     (do
       (let [movie-id (:id params)
-            query-params (assoc (select-keys params [:title :link])
+            query-params (assoc (select-keys params [:title :link :original_title])
                                 :is_watched (util/not-nil? (:is_watched params))
                                 :id (util/int-or-nil movie-id))
             movie-tags (util/into-a-vec (:movie-tags params))]
@@ -78,7 +78,10 @@
 
 (defn edit-movie [{:keys [params flash]}]
   (let [movie-id (:id params)
-        movie (dbh/movie-or-nil movie-id)
+        movie-record (dbh/movie-or-nil movie-id)
+        movie (if (not (nil? movie-record))
+                movie-record
+                {:id "new"})
         all-movie-tags (db/get-movie-tags)
         this-movie-tags (set (dbh/movie-get-tags movie-id))
         ;; adds a new selected : boolean to the movie tags list based on whether
