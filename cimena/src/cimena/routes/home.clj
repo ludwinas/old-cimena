@@ -96,7 +96,10 @@
                                        (select-keys flash [:errors])))))
 
 (defn populate-new-movie [{:keys [params]}]
-  (let [movie {:title (:title params) :link (:link params) :id "new"}
+  (let [movie {:title (:title params)
+               :original_title (:original_title params)
+               :link (:link params)
+               :id "new"}
         tags (db/get-movie-tags)]
     (layout/render "movie-edit.html"
                    {:movie movie

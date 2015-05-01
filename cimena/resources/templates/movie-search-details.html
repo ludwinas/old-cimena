@@ -17,7 +17,7 @@
             <li class="list-group-item">
                 <h5>Genres</h5>
                 {% for genre in result.genres %}
-                {{genre.name}}
+                <span class="label label-info">{{genre.name}}</span>
                 {% endfor %}
             </li>
             {% endif %}
@@ -28,7 +28,9 @@
         </ul>
         <div>
             <a class="btn btn-default btn-sm" href="//themoviedb.org/movie/{{result.id}}" role="button">View on TMDB</a>
-            <a class="btn btn-default btn-sm" href="#" role="button">Add this movie</a>
+            <button class="btn btn-default btn-sm add-movie" role="button" data-movie-id="{{result.id}}" data-movie-title="{{result.title}}" data-movie-original-title="{{result.original_title}}">
+                Add this movie
+            </button>
         </div>
     </div>
 </div>
