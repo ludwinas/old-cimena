@@ -31,15 +31,7 @@
                                 :is_watched (util/not-nil? (:is_watched params))
                                 :id (util/int-or-nil movie-id))
             movie-tags (util/into-a-vec (:movie-tags params))]
-        (if (m/is-a-movie? movie-id)
-          ;; update
-          (do
-            (dbh/movie-add-tags! movie-id movie-tags)
-            (db/update-movie! query-params))
-          ;; insert
-          (let [new-movie (db/create-movie<! query-params)
-                new-movie-id (:id new-movie)]
-            (dbh/movie-add-tags! new-movie-id movie-tags))))
+        (dbh/save-movie! movie-id movie-tags query-params))
       (redirect "/"))))
 
 (defn delete-movie! [{:keys [params]}]

@@ -29,7 +29,6 @@
         second-set (set (map int-or-nil coll2))]
     (clojure.data/diff first-set second-set)))
 
-
 (defn into-a-vec [item]
   "transforms the given item into a vector, no matter if it's a collection or a
   single item"

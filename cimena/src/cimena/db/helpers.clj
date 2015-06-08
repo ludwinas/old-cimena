@@ -8,6 +8,15 @@
 (defn movie-or-nil [id]
   (first (db/get-movie {:id (util/int-or-nil id)})))
 
+(defn is-a-movie? [id]
+  (util/not-nil? (movie-or-nil id)))
+
+(defn movie-tag-or-nil [id]
+  (first (db/get-movie-tag {:id (util/int-or-nil id)})))
+
+(defn is-a-movie-tag? [id]
+  (util/not-nil? (movie-tag-or-nil id)))
+
 (defn movie-get-tags-from-list [id tags-list]
   (map :movie_tag_id (filter #(= (:movie_id %) id) tags-list)))
 
@@ -28,8 +37,6 @@
                           (movie-get-tags-from-list (:id current-movie) movies-movie-tags))}))
          movies-from-db)))
 
-(defn movie-tag-or-nil [id]
-  (first (db/get-movie-tag {:id (util/int-or-nil id)})))
 
 (defn build-movie-tag-query-params [params]
   (assoc (select-keys params [:label :color])
@@ -37,7 +44,7 @@
 
 (defn store-movie-tag! [params]
   (let [query-params (build-movie-tag-query-params params)]
-  (if (util/not-nil? (movie-tag-or-nil (:id params)))
+  (if (is-a-movie-tag? (:id params))
     (db/update-movie-tag! query-params)
     (db/create-movie-tag! query-params))))
 
@@ -69,3 +76,14 @@
   (let [query-params {:movie_id (util/int-or-nil movie-id)}]
     (->> (db/movie-get-tags query-params)
          (map :movie_tag_id))))
+
+(defn save-movie! [movie-id movie-tags query-params]
+  (if (is-a-movie? movie-id)
+    ;; update
+    (do
+      (movie-add-tags! movie-id movie-tags)
+      (db/update-movie! query-params))
+    ;; insert
+    (let [new-movie (db/create-movie<! query-params)
+          new-movie-id (:id new-movie)]
+      (movie-add-tags! new-movie-id movie-tags))))
