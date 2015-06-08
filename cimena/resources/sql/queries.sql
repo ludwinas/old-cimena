@@ -28,26 +28,6 @@ SELECT * FROM movies WHERE is_watched = true ORDER BY title
 DELETE FROM movies
 WHERE id = :id
 
--- name: create-movie-position!
-INSERT INTO movie_position
-(movie_id, position_prev, position_next)
-VALUES (:movie_id, :position_prev, :position_next)
-
--- name: update-movie-position!
-UPDATE movie_position
-SET position_prev = :position_prev, position_next = :position_next
-WHERE movie_id = :movie_id
-
--- name: get-movie-positions
-SELECT * from movie_position
-
--- name: is-movie-in-ordered-list?
-SELECT COUNT(1) from movie_position where movie_id = :movie_id
-
--- name: delete-movie-position!
-DELETE FROM movie_position
-WHERE movie_id = :movie_id
-
 -- name: create-movie-tag!
 -- creates a new movie record
 INSERT INTO movie_tag
