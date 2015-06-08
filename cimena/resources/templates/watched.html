@@ -1,33 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="row">
-    <div class="col-md-6">
-        <h4>These, we have watched</h4>
-        <ul id="movie-list" class="list-group">
-            {% for movie in movies %}
-            <li class="list-group-item movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %} ui-state-default movie-to-sort" data-movie-id="{{movie.id}}">
-                <!-- this will be used by js making the ajax delete request -->
-                {% csrf-field %}
-                <h5>
-                    {{movie.title}}
-                </h5>
-                <a href="{{movie.link}}">{{movie.link}}</a>
-                <div class="pull-right buttons-container">
-                    <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                    <button class="btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </button>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+    {% include "sidebar.html" %}
+    <div class="col-sm-7">
+        <table id="movie-list" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Tags</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <!-- this will be used by js making the ajax delete request -->
+            {% csrf-field %}
+            <tbody>
+                {% for movie in movies %}
+                <tr class="movie-row  movie-id-{{movie.id}} {%  if movie.is_watched %} movie-watched {% endif %}" data-movie-id="{{movie.id}}">
+                    <td>
+                        {{movie.title}}
+                    </td>
+                    <td>
+                        <span class="movie-tags">
+                            {% for tag in movie.tags %}
+                            <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
+                            {% endfor %}
+                        </span>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="{{movie.link}}" title="Go to the TMDB page">
+                            <span class="glyphicon glyphicon-link"></span>
+                        </a>
+                        <a class="btn btn-info btn-xs edit-movie" role="button" href="/movie/{{movie.id}}">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger btn-xs delete-movie" type="button" data-movie-id="{{movie.id}}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
     </div>
-    <div class="col-md-6">
+    <div class="col-sm-3">
         <img src="/img/complete.gif" alt="complete"/>
     </div>
-    
 </div>
 {% endblock %}
 {% block page-scripts %}

@@ -5,43 +5,14 @@ body {
     padding-top: 40px;
 }
 
-ul.sortable {
-    min-height:20px;
+table#movie-list tr.movie-row > td {
+    padding-top:15px;
+    padding-bottom:15px;
 }
 
-li.movie-watched {
-    background-color: #dcdcdc;
+table#movie-list span.movie-title {
+    font-size: 14px;
 }
 
-button.delete-movie, a.edit-movie {
-    margin-top:-12px;
-}
-
-li.movie-watched h5, li.movie-watched a {
-    text-decoration: line-through;
-}
-
-.ui-state-highlight {
-    height:62px;
-    list-style:none;
-}
-
-li.ui-sortable-handle:hover {
-    cursor: pointer;
-}
-
-div.space-top {
-    padding-top:2.5em;
-}
-
-.action-buttons .btn {
-    margin-top:10px;
-}
-
-.action-buttons .btn:first {
-    margin-top:none;
-}
-
-h5 {
-    display:inline-block;
+div#sidebar {
 }

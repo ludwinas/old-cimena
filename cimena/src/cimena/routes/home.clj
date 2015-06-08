@@ -121,4 +121,4 @@
   (POST "/movie/:id/delete" request (delete-movie! request))
   (POST "/update-positions" request (update-positions! request))
   (GET "/movie/new/populate" request (populate-new-movie request))
-  (GET "/list-watched" request (list-watched request)))
+  (GET "/watched" request (list-watched request)))
