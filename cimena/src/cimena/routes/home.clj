@@ -79,8 +79,18 @@
 
 (defn list-watched [{:keys [flash]}]
   (layout/render "watched.html"
-                 {:movies (db/get-watched-movies)
+                 {:movies (dbh/get-watched-movies)
                   :sidebar-info (m/get-sidebar-info "watched")}))
+
+(defn get-movies-by-tag
+  [request]
+  (layout/render
+   "home.html"
+   (let [tag-id (get-in request [:params :tag-id])
+         movies (dbh/get-movies-by-tag tag-id)]
+     (info tag-id)
+     {:movies movies
+      :sidebar-info (m/get-sidebar-info "home")})))
 
 (defroutes home-routes
   (GET "/" request (home-page request))
@@ -88,4 +98,5 @@
   (POST "/movie/:id" request (save-movie! request))
   (POST "/movie/:id/delete" request (delete-movie! request))
   (GET "/movie/new/populate" request (populate-new-movie request))
+  (GET "/movies-by-tag/:tag-id" [] get-movies-by-tag)
   (GET "/watched" request (list-watched request)))

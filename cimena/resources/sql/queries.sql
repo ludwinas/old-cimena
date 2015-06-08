@@ -79,3 +79,10 @@ SELECT id, label, color, (SELECT COUNT(1)
                           FROM movies_movie_tag
                           WHERE movies_movie_tag.movie_tag_id = id)
                                 FROM movie_tag;
+
+-- name: get-movies-by-tag
+-- gets all the movies that correspond to a specific tag
+SELECT m.id, m.title, m.link, m.is_watched, m.original_title FROM movies m
+LEFT JOIN movies_movie_tag mmt
+     ON mmt.movie_id = m.id
+WHERE movie_tag_id = :movie_tag_id;

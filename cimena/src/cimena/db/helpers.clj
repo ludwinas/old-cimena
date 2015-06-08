@@ -23,9 +23,11 @@
 (defn get-tag-by-id [tag-id movie-tags]
   (util/get-item-with-keyword :id tag-id movie-tags))
 
-(defn get-movies []
-  (let [movies-from-db (db/get-movies)
-        movie-tags (db/get-movie-tags)
+(defn merge-tag-info
+  "Expects a collection of movies as it would be retrieved from the database;
+  merges tag information into the movie record hashmap."
+  [list-of-movies]
+  (let [movie-tags (db/get-movie-tags)
         movies-movie-tags (db/get-movies-movie-tags)]
         ;; For each movie we first look up which movie tags are associated with
         ;; it and then, by id, we retrieve tag information. Then we merge that
@@ -35,8 +37,24 @@
                   {:tags (map
                           #(get-tag-by-id % movie-tags)
                           (movie-get-tags-from-list (:id current-movie) movies-movie-tags))}))
-         movies-from-db)))
+         list-of-movies)))
 
+(defn get-movies
+  []
+  (let [movies (db/get-movies)]
+    (merge-tag-info movies)))
+
+(defn get-watched-movies
+  []
+  (let [watched-movies (db/get-watched-movies)]
+    (merge-tag-info watched-movies)))
+
+(defn get-movies-by-tag
+  [id]
+  (let [tag-id (util/int-or-nil id)
+        movies-by-tag (db/get-movies-by-tag {:movie_tag_id tag-id})]
+    (info movies-by-tag)
+    (merge-tag-info movies-by-tag)))
 
 (defn build-movie-tag-query-params [params]
   (assoc (select-keys params [:label :color])
