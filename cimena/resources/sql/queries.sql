@@ -1,8 +1,8 @@
 -- name: create-movie<!
 -- creates a new movie record
 INSERT INTO movies
-(title, link, is_watched, original_title)
-VALUES (:title, :link, :is_watched, :original_title);
+(title, link, is_watched, original_title, date_added)
+VALUES (:title, :link, :is_watched, :original_title, :date_added::timestamp);
 
 -- name: update-movie!
 -- update an existing movie record
@@ -17,7 +17,8 @@ WHERE id = :id;
 
 -- name: get-movies
 -- gets all the movies
-SELECT * FROM movies;
+SELECT * FROM movies
+ORDER BY date_added DESC;
 
 -- name: get-watched-movies
 -- gets all the movies
@@ -82,7 +83,9 @@ SELECT id, label, color, (SELECT COUNT(1)
 
 -- name: get-movies-by-tag
 -- gets all the movies that correspond to a specific tag
-SELECT m.id, m.title, m.link, m.is_watched, m.original_title FROM movies m
+SELECT m.id, m.title, m.link, m.is_watched, m.original_title, m.date_added
+FROM movies m
 LEFT JOIN movies_movie_tag mmt
      ON mmt.movie_id = m.id
-WHERE movie_tag_id = :movie_tag_id;
+WHERE movie_tag_id = :movie_tag_id
+ORDER BY date_added DESC;;

@@ -87,8 +87,7 @@
     ;; and then add new ones!
     (doseq [tag-id inserts]
       (db/movie-add-tag! {:movie_id movie-id
-                          :movie_tag_id (util/int-or-nil tag-id)}))
-    ))
+                          :movie_tag_id (util/int-or-nil tag-id)}))))
 
 (defn movie-get-tags [movie-id]
   (let [query-params {:movie_id (util/int-or-nil movie-id)}]
@@ -102,6 +101,7 @@
       (movie-add-tags! movie-id movie-tags)
       (db/update-movie! query-params))
     ;; insert
-    (let [new-movie (db/create-movie<! query-params)
+    (let [insert-query-params (assoc query-params :date_added (str (java.util.Date.)))
+          new-movie (db/create-movie<! insert-query-params)
           new-movie-id (:id new-movie)]
       (movie-add-tags! new-movie-id movie-tags))))

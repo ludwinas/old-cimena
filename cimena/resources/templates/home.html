@@ -9,6 +9,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Tags</th>
+                    <th>Date added</th>
                     <th></th>
                 </tr>
             </thead>
@@ -31,6 +32,9 @@
                             <span data-tag-color="{{tag.color}}" class="label label-default movie-tag-label">{{tag.label}}</span>
                             {% endfor %}
                         </span>
+                    </td>
+                    <td>
+                        {{movie.date_added|date:mediumDateTime:gb}}
                     </td>
                     <td>
                         <a class="btn btn-primary btn-xs" href="{{movie.link}}" title="Go to the TMDB page">
