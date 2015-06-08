@@ -23,8 +23,7 @@
   (if-let [errors (validate-movie params)]
     (-> (redirect (str "/movie/" (:id params))) ;; redirect back to the same page
         (assoc :flash (assoc params :errors (vals errors))))
-    ;; TODO: outsource this to a db helper (at least building the query params,
-    ;; seing as there's a bunch of logic embedded in the update function
+    ;; do here is necessary because we want to both store the movie and redirect
     (do
       (let [movie-id (:id params)
             query-params (assoc (select-keys params [:title :link :original_title])
@@ -44,7 +43,8 @@
    (let [movies (dbh/get-movies)
          ;; filter out the movies that have been marked as watched
          movies-to-watch (filter (complement :is_watched) movies)]
-     {:movies movies-to-watch :sidebar-info (m/get-sidebar-info "home")})))
+     {:movies movies-to-watch
+      :sidebar-info (m/get-sidebar-info "home")})))
 
 (defn edit-movie [{:keys [params flash]}]
   (let [movie-id (:id params)
