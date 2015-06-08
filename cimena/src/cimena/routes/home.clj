@@ -88,7 +88,6 @@
    "home.html"
    (let [tag-id (get-in request [:params :tag-id])
          movies (dbh/get-movies-by-tag tag-id)]
-     (info tag-id)
      {:movies movies
       :sidebar-info (m/get-sidebar-info "home")})))
 
